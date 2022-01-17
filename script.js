@@ -182,3 +182,49 @@ console.log(bob.getFullName());
 bob.setFullName("alice spencer");
 console.log(bob.getFullName());
 console.log(Object.keys(bob));
+
+// ### 75. Palindrome Checker - freecodecamp
+/* Return true if the given string is a palindrome. Otherwise, return false.
+
+A palindrome is a word or sentence that's spelled the same way both forward and backward, ignoring punctuation, case, and spacing.
+
+Note: You'll need to remove all non-alphanumeric characters (punctuation, spaces and symbols) and turn everything into the same case (lower or upper case) in order to check for palindromes.
+
+We'll pass strings with varying formats, such as racecar, RaceCar, and race CAR among others.
+
+We'll also pass strings with special symbols, such as 2A3*3a2, 2A3 3a2, and 2_A3*3#A2. */
+
+function palindrome(strInput) {
+    const str = strInput.replace(/[_\W]/gi, "").toLowerCase();
+    const reverseStr = str.split("").reverse().join("");
+    // console.log(str, reverseStr);
+    return str === reverseStr;
+}
+
+// A faster way for very looong strings. This solution speed is n/2 complexity
+function palindrome2(str) {
+    // Assign front and back indexes
+    let front = 0;
+    let back = str.length - 1;
+    str = str.toLowerCase();
+
+    // check the matching chars at front and back while excluding unwanted chars.
+    while (back > front) {
+        if (str[front].match(/[_\W]/)) {
+            front++;
+            continue;
+        }
+        if (str[back].match(/[_\W]/)) {
+            back--;
+            continue;
+        }
+        if (str[front] !== str[back]) return false;
+        front++;
+        back--;
+    }
+    return true;
+}
+
+console.log(palindrome2("My age is 0, 0 si ega ym.")); //true
+console.log(palindrome2("__My age is-0, 0 s  i- ega ym.")); //true
+console.log(palindrome2("eye")); //true

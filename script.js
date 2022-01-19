@@ -316,3 +316,173 @@ console.log(telephoneCheck2("1-5555555555"));
 
 console.log(telephoneCheck2("555-555-5555"));
 console.log(telephoneCheck2("(555)555-5555"));
+
+// ### 77. Roman Numeral Converter - freecodecamp
+/* Convert the given number into a roman numeral.
+
+All roman numerals answers should be provided in upper-case. */
+// ++++
+/* convertToRoman(2) should return the string II.
+
+convertToRoman(3) should return the string III.
+
+convertToRoman(4) should return the string IV.
+
+convertToRoman(5) should return the string V.
+
+convertToRoman(9) should return the string IX.
+
+convertToRoman(12) should return the string XII.
+
+convertToRoman(16) should return the string XVI.
+
+convertToRoman(29) should return the string XXIX.
+
+convertToRoman(44) should return the string XLIV.
+
+convertToRoman(45) should return the string XLV.
+
+convertToRoman(68) should return the string LXVIII
+
+convertToRoman(83) should return the string LXXXIII
+
+convertToRoman(97) should return the string XCVII
+
+convertToRoman(99) should return the string XCIX
+
+convertToRoman(400) should return the string CD
+
+convertToRoman(500) should return the string D
+
+convertToRoman(501) should return the string DI
+
+convertToRoman(649) should return the string DCXLIX
+
+convertToRoman(798) should return the string DCCXCVIII
+
+convertToRoman(891) should return the string DCCCXCI
+
+convertToRoman(1000) should return the string M
+
+convertToRoman(1004) should return the string MIV
+
+convertToRoman(1006) should return the string MVI
+
+convertToRoman(1023) should return the string MXXIII
+
+convertToRoman(2014) should return the string MMXIV
+
+convertToRoman(3999) should return the string MMMCMXCIX */
+
+function convertToRoman(num) {
+    // Error handling
+    if (typeof num !== "number" || !Number.isInteger(num)) return undefined;
+
+    // reverse num for reading digits by index
+    let digits = num.toString().split("").reverse().join("");
+
+    let roman = "";
+
+    // converting first digit
+    switch (digits[0]) {
+        case "9":
+            roman = "IX";
+            break;
+        case "1":
+            roman = "I";
+            break;
+        case "2":
+            roman = "II";
+            break;
+        case "3":
+            roman = "III";
+            break;
+        case "4":
+            roman = "IV";
+            break;
+        case "5":
+            roman = "V";
+            break;
+        case "6":
+            roman = "VI";
+            break;
+        case "7":
+            roman = "VII";
+            break;
+        case "8":
+            roman = "VIII";
+            break;
+    }
+
+    // converting second digit if exists
+    if (digits.length >= 2) {
+        switch (digits[1]) {
+            case "9":
+                roman = "XC" + roman;
+                break;
+            case "1":
+                roman = "X" + roman;
+                break;
+            case "2":
+                roman = "XX" + roman;
+                break;
+            case "3":
+                roman = "XXX" + roman;
+                break;
+            case "4":
+                roman = "XL" + roman;
+                break;
+            case "5":
+                roman = "L" + roman;
+                break;
+            case "6":
+                roman = "LX" + roman;
+                break;
+            case "7":
+                roman = "LXX" + roman;
+                break;
+            case "8":
+                roman = "LXXX" + roman;
+                break;
+        }
+    }
+    // converting third digit if exists
+    if (digits.length >= 3) {
+        switch (digits[2]) {
+            case "9":
+                roman = "CM" + roman;
+                break;
+            case "1":
+                roman = "C" + roman;
+                break;
+            case "2":
+                roman = "CC" + roman;
+                break;
+            case "3":
+                roman = "CCC" + roman;
+                break;
+            case "4":
+                roman = "CD" + roman;
+                break;
+            case "5":
+                roman = "D" + roman;
+                break;
+            case "6":
+                roman = "DC" + roman;
+                break;
+            case "7":
+                roman = "DCC" + roman;
+                break;
+            case "8":
+                roman = "DCCC" + roman;
+                break;
+        }
+    }
+    // converting fourth digit if exists
+    if (digits.length >= 4) {
+        roman = "".padStart(+digits[3], "M") + roman;
+    }
+    return roman;
+}
+
+console.log(convertToRoman(3721));

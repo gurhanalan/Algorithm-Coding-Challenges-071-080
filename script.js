@@ -518,3 +518,129 @@ function rot13(str) {
 }
 
 console.log(rot13("SERR PBQR PNZC"));
+
+// ##### 79. Cash Register - freecodecamp
+/* Design a cash register drawer function checkCashRegister() that accepts purchase price as the first argument (price), payment as the second argument (cash), and cash-in-drawer (cid) as the third argument.
+
+cid is a 2D array listing available currency.
+
+The checkCashRegister() function should always return an object with a status key and a change key.
+
+Return {status: "INSUFFICIENT_FUNDS", change: []} if cash-in-drawer is less than the change due, or if you cannot return the exact change.
+
+Return {status: "CLOSED", change: [...]} with cash-in-drawer as the value for the key change if it is equal to the change due.
+
+Otherwise, return {status: "OPEN", change: [...]}, with the change due in coins and bills, sorted in highest to lowest order, as the value of the change key.
+
+Currency Unit	Amount
+Penny	$0.01 (PENNY)
+Nickel	$0.05 (NICKEL)
+Dime	$0.1 (DIME)
+Quarter	$0.25 (QUARTER)
+Dollar	$1 (ONE)
+Five Dollars	$5 (FIVE)
+Ten Dollars	$10 (TEN)
+Twenty Dollars	$20 (TWENTY)
+One-hundred Dollars	$100 (ONE HUNDRED)
+See below for an example of a cash-in-drawer array:
+
+[
+  ["PENNY", 1.01],
+  ["NICKEL", 2.05],
+  ["DIME", 3.1],
+  ["QUARTER", 4.25],
+  ["ONE", 90],
+  ["FIVE", 55],
+  ["TEN", 20],
+  ["TWENTY", 60],
+  ["ONE HUNDRED", 100]
+] */
+
+// +++++++++++++++++++++++++++++++++++++++++++
+/* checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]) should return an object.
+
+checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]) should return {status: "OPEN", change: [["QUARTER", 0.5]]}.
+
+checkCashRegister(3.26, 100, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]) should return {status: "OPEN", change: [["TWENTY", 60], ["TEN", 20], ["FIVE", 15], ["ONE", 1], ["QUARTER", 0.5], ["DIME", 0.2], ["PENNY", 0.04]]}.
+
+checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]) should return {status: "INSUFFICIENT_FUNDS", change: []}.
+
+checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]) should return {status: "INSUFFICIENT_FUNDS", change: []}.
+
+checkCashRegister(19.5, 20, [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]) should return {status: "CLOSED", change: [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]}. */
+
+function checkCashRegister(price, cash, cid) {
+    const changeDict = {};
+    let change = cash - price;
+    let totalCid = cid.reduce((acc, el) => acc + el[1], 0);
+    changeDict.status =
+        change === totalCid
+            ? "CLOSED"
+            : change > totalCid
+            ? "INSUFFICIENT_FUNDS"
+            : "OPEN";
+
+    const money = {
+        PENNY: 0.01,
+        NICKEL: 0.05,
+        DIME: 0.1,
+        QUARTER: 0.25,
+        ONE: 1,
+        FIVE: 5,
+        TEN: 10,
+        TWENTY: 20,
+        "ONE HUNDRED": 100,
+    };
+    const cashBack = [];
+    let changeLeft = totalCid;
+    if (totalCid < change) changeDict.change = cashBack;
+    if (totalCid === change) changeDict.change = cid;
+
+    if (totalCid > change) {
+        let nobills = true;
+        // Creating new CID and CashBack array
+        const newCid = cid
+            .reverse()
+            .map((arr) => {
+                let totalBack = 0;
+                while (
+                    +change.toFixed(2) >= money[arr[0]] &&
+                    arr[1] > 0 &&
+                    changeLeft > change
+                ) {
+                    change -= money[arr[0]];
+                    // console.log(change);
+                    arr[1] -= money[arr[0]];
+                    // totalCid -= money[arr[0]];
+                    totalBack += money[arr[0]];
+                    changeLeft -= money[arr[0]];
+                }
+                if (totalBack) {
+                    cashBack.push([arr[0], totalBack]);
+                    nobills = false;
+                }
+                changeLeft -= arr[1];
+                return arr;
+            })
+            .reverse()
+            .slice();
+        changeDict.change = cashBack;
+        if (nobills) changeDict.status = "INSUFFICIENT_FUNDS";
+    }
+
+    return changeDict;
+}
+
+console.log(
+    checkCashRegister(3.26, 100, [
+        ["PENNY", 1.05],
+        ["NICKEL", 2.05],
+        ["DIME", 3.1],
+        ["QUARTER", 4.25],
+        ["ONE", 90],
+        ["FIVE", 55],
+        ["TEN", 20],
+        ["TWENTY", 60],
+        ["ONE HUNDRED", 100],
+    ])
+);

@@ -644,3 +644,26 @@ console.log(
         ["ONE HUNDRED", 100],
     ])
 );
+
+// 80. (Ready for) Prime Time 5kyu
+/* We need prime numbers and we need them now!
+
+Write a method that takes a maximum bound and returns all primes up to and including the maximum bound.
+
+For example,
+
+11 => [2, 3, 5, 7, 11] */
+
+function prime(num) {
+    // Generate an array containing every prime number between 0 and the num specified (inclusive)
+    const arrPrimes = [2];
+    let i = 2;
+    if (i > num) return [];
+    while (i <= num) {
+        if (arrPrimes.every((el) => i % el !== 0)) arrPrimes.push(i);
+
+        i++;
+    }
+
+    return arrPrimes;
+}
